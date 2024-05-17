@@ -1,0 +1,70 @@
+# depslib dependency file v1.0
+1711546789 source:d:\c++\gameproject\firstgame2\firstgame2\main.cpp
+	<iostream>
+	"SDL.h"
+	"SDL_image.h"
+	"mainFunc.h"
+
+1711330580 d:\c++\gameproject\firstgame2\firstgame2\mainfunc.h
+	<iostream>
+	<SDL.h>
+	<SDL_image.h>
+
+1711330622 source:d:\c++\gameproject\firstgame2\firstgame2\mainfunc.cpp
+	"mainFunc.h"
+
+1715874293 source:d:\c++\gameproject\firstgame2\main.cpp
+	"mainFunc.h"
+	"Player.h"
+	"Enemy.h"
+	"Explosion.h"
+
+1715269090 d:\c++\gameproject\firstgame2\mainfunc.h
+	<iostream>
+	<SDL.h>
+	<SDL_image.h>
+	<string>
+	<vector>
+	<stdlib.h>
+	<time.h>
+	<cmath>
+
+1714619584 source:d:\c++\gameproject\firstgame2\mainfunc.cpp
+	"mainFunc.h"
+
+1714873527 d:\c++\gameproject\firstgame2\objects.h
+	"mainFunc.h"
+
+1714878652 source:d:\c++\gameproject\firstgame2\objects.cpp
+	"Objects.h"
+	"mainFunc.h"
+
+1714639298 d:\c++\gameproject\firstgame2\player.h
+	"mainFunc.h"
+	"Objects.h"
+	"Bullet.h"
+	<vector>
+
+1714955737 source:d:\c++\gameproject\firstgame2\player.cpp
+	"Player.h"
+
+1715155395 source:d:\c++\gameproject\firstgame2\bullet.cpp
+	"Bullet.h"
+
+1714619248 d:\c++\gameproject\firstgame2\bullet.h
+	"Objects.h"
+	"mainFunc.h"
+
+1715273462 source:d:\c++\gameproject\firstgame2\enemy.cpp
+	"Enemy.h"
+
+1715273462 d:\c++\gameproject\firstgame2\enemy.h
+	"Player.h"
+	"Bullet.h"
+
+1715268838 source:d:\c++\gameproject\firstgame2\explosion.cpp
+	"Explosion.h"
+
+1715268838 d:\c++\gameproject\firstgame2\explosion.h
+	"Objects.h"
+
