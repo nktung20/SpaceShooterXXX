@@ -4,13 +4,16 @@
 #pragma once
 
 #include <iostream>
+#include <fstream>
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_mixer.h>
+#include <SDL_ttf.h>
 #include <string>
  #include <vector>
 #include <stdlib.h>
 #include <time.h>
-#include<cmath>
+#include <cmath>
 extern SDL_Window* g_window;
 extern SDL_Renderer* g_screen;
 extern SDL_Event g_event;

@@ -10,6 +10,7 @@
 #define p_speed 10
 class Player:public Objects {
 public:
+    float value;
     Player();
     ~Player();
 
@@ -27,6 +28,7 @@ private:
 
     float x_pos_;
     float y_pos_;
+
 
 };
 

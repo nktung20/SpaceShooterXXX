@@ -24,23 +24,24 @@ void Player::Update()
 
 void Player::handleInput(SDL_Event events,SDL_Renderer* screen)
 {
+    value=0;
     if (events.type==SDL_KEYDOWN && events.key.repeat == 0) {
         switch(events.key.keysym.sym) {
             case SDLK_RIGHT :
                 x_val_+=p_speed;
                 break;
 
-            case SDLK_LEFT: {
+            case SDLK_LEFT:
                 x_val_-=p_speed;
                 break;
-            }
-            case SDLK_UP: {
+
+            case SDLK_UP:
             y_val_-=p_speed;
             break;
-            }
-            case SDLK_DOWN: {
+
+            case SDLK_DOWN:
             y_val_+=p_speed;
-            }
+
             break;
             case SDLK_e:
                 Bullet* p_bullet=new Bullet();
@@ -49,7 +50,9 @@ void Player::handleInput(SDL_Event events,SDL_Renderer* screen)
             p_bullet->set_y(6);
             p_bullet->setmoving(true);
             p_bullets.push_back(p_bullet);
+            value=1;
             break;
+
         }
     } else if (events.type==SDL_KEYUP) {
         switch(events.key.keysym.sym) {
@@ -67,20 +70,15 @@ void Player::handleInput(SDL_Event events,SDL_Renderer* screen)
             case SDLK_DOWN:
                 y_val_ = 0;
                 break;
-            case SDLK_e:
-                Bullet* p_bullet=new Bullet();
-            p_bullet->loadImg("assets/playerBullet.png",screen);
-            p_bullet->setRect(this->rect_.x+(60/2)-2,rect_.y);
-            p_bullet->set_y(5);
-            p_bullet->setmoving(true);
-            break;
+             default:
+                break;
         }
     }
 
 }
 
 void Player::handleBullet(SDL_Renderer* des) {
-    for (int i=0;i<int(p_bullets.size());i++) {
+            for (int i=0;i<int(p_bullets.size());i++) {
         Bullet* p_bullet=p_bullets.at(i);
         if(p_bullet!=NULL) {
             if(p_bullet->getmoving()==true) {

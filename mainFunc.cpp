@@ -6,9 +6,10 @@
 
 bool init() {
     bool success=true;
-    if(SDL_Init(SDL_INIT_EVERYTHING)<0) {
+    if(SDL_Init(SDL_INIT_EVERYTHING)<0 ) {
         return false;
     }
+
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY,"1");
     g_window=SDL_CreateWindow("SpaceShooterXXX",SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED,SCREEN_WIDTH,SCREEN_HEIGHT,SDL_WINDOW_SHOWN);
     if (g_window==NULL) success=false;
@@ -20,6 +21,8 @@ bool init() {
                 int imgFlags=IMG_INIT_PNG;
                 if (!(IMG_Init(imgFlags)&& imgFlags))
                     success=false;
+                if (Mix_OpenAudio( 44100, MIX_DEFAULT_FORMAT, 2, 2048 )<0) return false;
+                if (TTF_Init() == -1) return false;
             }
     }
     return success;
@@ -31,6 +34,7 @@ void close () {
     g_screen=NULL;
     SDL_DestroyWindow(g_window);
     g_window=NULL;
+    TTF_Quit();
     IMG_Quit();
     SDL_Quit();
 }

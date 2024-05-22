@@ -68,3 +68,61 @@
 1715268838 d:\c++\gameproject\firstgame2\explosion.h
 	"Objects.h"
 
+1715155395 source:d:\c++\gameproject\spaceshooterxxx\bullet.cpp
+	"Bullet.h"
+
+1714619248 d:\c++\gameproject\spaceshooterxxx\bullet.h
+	"Objects.h"
+	"mainFunc.h"
+
+1714873527 d:\c++\gameproject\spaceshooterxxx\objects.h
+	"mainFunc.h"
+
+1716363681 d:\c++\gameproject\spaceshooterxxx\mainfunc.h
+	<iostream>
+	<fstream>
+	<SDL.h>
+	<SDL_image.h>
+	<SDL_mixer.h>
+	<SDL_ttf.h>
+	<string>
+	<vector>
+	<stdlib.h>
+	<time.h>
+	<cmath>
+
+1716366724 source:d:\c++\gameproject\spaceshooterxxx\enemy.cpp
+	"Enemy.h"
+
+1716366750 d:\c++\gameproject\spaceshooterxxx\enemy.h
+	"Player.h"
+	"Bullet.h"
+
+1716316359 d:\c++\gameproject\spaceshooterxxx\player.h
+	"mainFunc.h"
+	"Objects.h"
+	"Bullet.h"
+	<vector>
+
+1715268838 source:d:\c++\gameproject\spaceshooterxxx\explosion.cpp
+	"Explosion.h"
+
+1715268838 d:\c++\gameproject\spaceshooterxxx\explosion.h
+	"Objects.h"
+
+1716363181 source:d:\c++\gameproject\spaceshooterxxx\mainfunc.cpp
+	"mainFunc.h"
+
+1714878652 source:d:\c++\gameproject\spaceshooterxxx\objects.cpp
+	"Objects.h"
+	"mainFunc.h"
+
+1716365237 source:d:\c++\gameproject\spaceshooterxxx\player.cpp
+	"Player.h"
+
+1716366313 source:d:\c++\gameproject\spaceshooterxxx\main.cpp
+	"mainFunc.h"
+	"Player.h"
+	"Enemy.h"
+	"Explosion.h"
+

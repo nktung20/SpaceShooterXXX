@@ -13,7 +13,7 @@ const int Boss_height=100;
 class Enemy:public Objects {
 public:
     Enemy();
-    Enemy(int _x,int _vel);
+    Enemy(int _x,double _vel);
     ~Enemy();
 
 
@@ -36,8 +36,8 @@ public:
     void set_v(const int& v) {
         velocity=v;
     }
-    void createBullet(const int& x_border,const int& y_border,SDL_Renderer* screen,const float &player_pos_x,const float &player_pos_y,std::vector <Bullet*> &e_bullets);
-    void B_createBullet(const int& x_border,const int& y_border,SDL_Renderer* screen,const float &player_pos_x,const float &player_pos_y,std::vector <Bullet*> &b_bullets);
+    void createBullet(const int& x_border,const int& y_border,SDL_Renderer* screen,const float &player_pos_x,const float &player_pos_y,std::vector <Bullet*> &e_bullets,double &v);
+    void B_createBullet(const int& x_border,const int& y_border,SDL_Renderer* screen,const float &player_pos_x,const float &player_pos_y,std::vector <Bullet*> &b_bullets,double &v);
 private:
     Uint64 startTime;
     float x_val_;

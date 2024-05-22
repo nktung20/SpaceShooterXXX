@@ -10,36 +10,113 @@ Objects g_menu;
 Objects g_death;
 Objects g_death_menu;
 
-bool loadBackground()
+Mix_Chunk* gMusic = NULL;
+Mix_Chunk* enemy_expolosion_sound = NULL;
+Mix_Chunk* player_explosion_sound = NULL;
+Mix_Chunk* enemy_shooting_sound = NULL;
+Mix_Chunk* player_shooting_sound = NULL;
+Mix_Chunk* player_death_sound = NULL;
+
+TTF_Font* gFont = NULL;
+
+
+bool loadProperty()
 {
     bool ret = g_background.loadImg("assets/background.jpg", g_screen);
     g_background2.loadImg("assets/background.jpg", g_screen);
     g_menu.loadImg("assets/menu.png", g_screen);
     g_death.loadImg("assets/death.png", g_screen);
     g_death_menu.loadImg("assets/death_menu.png", g_screen);
+
+    // Reload all sound files
+    gMusic = Mix_LoadWAV("assets/space-asteroids.wav");
+    player_shooting_sound = Mix_LoadWAV("assets/shot.wav");
+    enemy_expolosion_sound = Mix_LoadWAV("assets/explosion.wav");
+    player_explosion_sound = Mix_LoadWAV("assets/p_explosion.wav");
+    player_death_sound = Mix_LoadWAV("assets/deathSound.wav");
+
+    gFont = TTF_OpenFont("assets/Galaxus.ttf", 28);
+
+    if (gFont==NULL) return false;
+
+    if (gMusic == NULL || player_shooting_sound == NULL || enemy_expolosion_sound == NULL)
+        return false;
+
     if (ret == false)
         return false;
+
     return true;
+}
+void closeMusic() {
+    TTF_CloseFont(gFont);
+    gFont = NULL;
+    if (gMusic != NULL) {
+        Mix_FreeChunk(gMusic);
+        gMusic = NULL;
+    }
+    if (enemy_expolosion_sound != NULL) {
+        Mix_FreeChunk(enemy_expolosion_sound);
+        enemy_expolosion_sound = NULL;
+    }
+    if (player_shooting_sound != NULL) {
+        Mix_FreeChunk(player_shooting_sound);
+        player_shooting_sound = NULL;
+    }
+}
+
+int readHighScore() {
+    std::ifstream file("highScore.txt");
+    int highScore=0;
+    if (file.is_open()) {
+        file >> highScore;
+        file.close();
+    }
+    return highScore;
+}
+void writeHighScore(int h ) {
+    std::ofstream file ("highScore.txt");
+    if (file.is_open()) {
+        file << h;
+        file.close();
+    }
+}
+
+void renderText(const std::string &text,int x , int y) {
+    SDL_Color textColor={255,255,255,255};
+    SDL_Surface* textsurface=TTF_RenderText_Solid(gFont,text.c_str(),textColor);
+    if (textsurface!=NULL) {
+        SDL_Texture* mTexture=SDL_CreateTextureFromSurface(g_screen,textsurface);
+        SDL_FreeSurface(textsurface);
+        if (mTexture!=NULL) {
+            SDL_Rect renderQuad={x,y,textsurface->w,textsurface->h};
+            SDL_RenderCopy(g_screen,mTexture,NULL,&renderQuad);
+            SDL_DestroyTexture(mTexture);
+        }
+    }
 }
 int main(int argc, char *argv[])
 {
     bool playAgain = true;
     bool is_quit = false;
-    int x=1100;
-    int v;
+    double v;
+    int highScore=readHighScore();
+    if (init() == false) return -1;
+
     while (playAgain && !is_quit)
     {
-        close();
+        int x=1100;
+        double v=4;
+        double bullet_v=5;
         int kill = 0;
+        if (loadProperty() == false) return -1;
         srand(time(NULL));
-        if (init() == false)
-            return -1;
-        if (loadBackground() == false)
-            return -1;
-
+        Mix_VolumeChunk(player_shooting_sound, 32);
+        Mix_VolumeChunk(player_death_sound,64);
+        Mix_PlayChannel( -1, gMusic, -1 );
         bool isInMenu = true;
-        while (isInMenu)
+        while (isInMenu&&!is_quit)
         {
+            SDL_RenderClear(g_screen);
             g_menu.renderTexture(g_screen, NULL);
             SDL_RenderPresent(g_screen);
             while (SDL_PollEvent(&g_event) != 0)
@@ -74,12 +151,13 @@ int main(int argc, char *argv[])
 
         while (!is_quit && !gameOver)
         {
-
+            std::cout << x << " " << bullet_v << std::endl;
             while (SDL_PollEvent(&g_event) != 0)
             {
                 if (g_event.type == SDL_QUIT)
                     is_quit = true;
                 p_player.handleInput(g_event, g_screen);
+               if (p_player.value==1) Mix_PlayChannel( -1, player_shooting_sound, 0 );
             }
             SDL_SetRenderDrawColor(g_screen, 255, 255, 255, 255);
             SDL_RenderClear(g_screen);
@@ -109,7 +187,7 @@ int main(int argc, char *argv[])
             float player_pos_x = p_player.getRect().x;
             float player_pos_y = p_player.getRect().y;
 
-            if (kill <= 3)
+            if (kill <= 15)
             {
                 for (int i = 0; i < int(enemies.size()); i++)
                 {
@@ -117,6 +195,10 @@ int main(int argc, char *argv[])
                     if (checkCollision(enemies[i]->getRect(), p_player.getRect()) == true)
                     {
                         p_player.free();
+                        Mix_HaltChannel(-1);
+                        Mix_PlayChannel(-1,player_explosion_sound,0);
+                        Mix_PlayChannel(-1,player_death_sound,0);
+
                         Uint64 _deathTime = SDL_GetTicks64();
                         while (SDL_GetTicks64() - _deathTime <= 2000)
                         {
@@ -129,15 +211,17 @@ int main(int argc, char *argv[])
                     if (p_player.checkBulletToEnemy(enemies[i]->getRect()) == true)
                     {
                         Explosion::createExplosion(enemies[i]->getRect().x, enemies[i]->getRect().y, e_explosions);
+
+                        Mix_PlayChannel( -1, enemy_expolosion_sound, 0 );
                         enemies[i]->free();
                         enemies.erase(enemies.begin() + i);
                         i--;
                         kill++;
-                        v+=0.1;
-                        x-=15;
+                        bullet_v+=0.05;
+                        x-=10;
                         continue;
                     }
-                    enemies[i]->createBullet(SCREEN_WIDTH, SCREEN_HEIGHT, g_screen, player_pos_x, player_pos_y, e_bullets);
+                    enemies[i]->createBullet(SCREEN_WIDTH, SCREEN_HEIGHT, g_screen, player_pos_x, player_pos_y, e_bullets,bullet_v);
                     if (enemies[i]->get_pos_y() > SCREEN_HEIGHT)
                     {
                         enemies.erase(enemies.begin() + i);
@@ -146,7 +230,7 @@ int main(int argc, char *argv[])
                     }
                 }
             }
-            else if (kill > 3)
+            else if (kill > 15)
             {
                 for (int i = 0; i < int(bosses.size()); i++)
                 {
@@ -154,6 +238,9 @@ int main(int argc, char *argv[])
                     if (checkCollision(bosses[i]->getRect(), p_player.getRect()) == true)
                     {
                         p_player.free();
+                        Mix_HaltChannel(-1);
+                        Mix_PlayChannel(-1,player_explosion_sound,0);
+                        Mix_PlayChannel(-1,player_death_sound,0);
                         Uint64 _deathTime = SDL_GetTicks64();
                         while (SDL_GetTicks64() - _deathTime <= 2000)
                         {
@@ -165,14 +252,17 @@ int main(int argc, char *argv[])
                     }
                     if (p_player.checkBulletToEnemy(bosses[i]->getRect()) == true)
                     {
+                        Mix_PlayChannel( -1, enemy_expolosion_sound, 0 );
                         Explosion::createBossExplosion(bosses[i]->getRect().x, bosses[i]->getRect().y, b_explosions);
                         bosses[i]->free();
                         bosses.erase(bosses.begin() + i);
                         i--;
                         kill++;
+                        bullet_v+=0.05;
+                        x-=10;
                         continue;
                     }
-                    bosses[i]->B_createBullet(SCREEN_WIDTH, SCREEN_HEIGHT, g_screen, player_pos_x, player_pos_y, b_bullets);
+                    bosses[i]->B_createBullet(SCREEN_WIDTH, SCREEN_HEIGHT, g_screen, player_pos_x, player_pos_y, b_bullets,bullet_v);
                     if (bosses[i]->get_pos_y() > SCREEN_HEIGHT)
                     {
                         bosses.erase(bosses.begin() + i);
@@ -185,17 +275,15 @@ int main(int argc, char *argv[])
 
             if ((SDL_GetTicks64() - startTime) >= x)
             {
-                if (kill <= 3)
+                if (kill <= 15)
                 {
                     int x = rand() % (SCREEN_WIDTH - Enemy_width);
-                    v = 4;
-
                     Enemy *newEnemy = new Enemy(x, v);
                     newEnemy->loadImg("assets/enemy.png", g_screen);
                     enemies.push_back(newEnemy);
                     startTime = SDL_GetTicks64();
                 }
-                else if (kill > 3)
+                else if (kill > 15)
                 {
                     x=900;
                     Uint64 waitTime = SDL_GetTicks64();
@@ -209,7 +297,6 @@ int main(int argc, char *argv[])
                         }
                     }
                     int x = rand() % (SCREEN_WIDTH - Boss_width);
-                    v = 4;
                     Enemy *newEnemy = new Enemy(x, v);
                     newEnemy->loadImg("assets/boss.png", g_screen);
                     bosses.push_back(newEnemy);
@@ -235,6 +322,9 @@ int main(int argc, char *argv[])
                         if (checkCollision(e_bullets[i]->getRect(), p_player.getRect()))
                         {
                             p_player.free();
+                            Mix_HaltChannel(-1);
+                            Mix_PlayChannel(-1,player_explosion_sound,0);
+                            Mix_PlayChannel(-1,player_death_sound,0);
                             Uint64 deathTime = SDL_GetTicks64();
                             while (SDL_GetTicks64() - deathTime <= 2000)
                             {
@@ -262,10 +352,14 @@ int main(int argc, char *argv[])
                 {
                     if (b_bullet->getmoving() == true)
                     {
+
                         b_bullet->handleEnemy(SCREEN_WIDTH, SCREEN_HEIGHT);
                         if (checkCollision(b_bullets[i]->getRect(), p_player.getRect()))
                         {
                             p_player.free();
+                            Mix_HaltChannel(-1);
+                            Mix_PlayChannel(-1,player_explosion_sound,0);
+                            Mix_PlayChannel(-1,player_death_sound,0);
                             Uint64 _deathTime = SDL_GetTicks64();
                         while (SDL_GetTicks64() - _deathTime <= 2000)
                         {
@@ -304,6 +398,15 @@ int main(int argc, char *argv[])
                 b_explosions[i]->renderTexture(g_screen, &B_currentClip);
             }
 
+            std::string scoreText = "Score: " + std::to_string(kill);
+            std::string highScoreText = "High Score: " + std::to_string(highScore);
+            if (kill > highScore) {
+                    highScore = kill; // Update high score
+                    writeHighScore(highScore);
+                }
+            renderText(scoreText, 10, 10);
+            renderText(highScoreText, 10, 40);
+
             // present
             SDL_RenderPresent(g_screen);
         }
@@ -336,6 +439,7 @@ int main(int argc, char *argv[])
             g_death_menu.renderTexture(g_screen, NULL);
             SDL_RenderPresent(g_screen);
         }
+    closeMusic();
     }
     close();
     return 0;
