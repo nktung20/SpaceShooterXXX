@@ -28,7 +28,6 @@ bool loadProperty()
     g_death.loadImg("assets/death.png", g_screen);
     g_death_menu.loadImg("assets/death_menu.png", g_screen);
 
-    // Reload all sound files
     gMusic = Mix_LoadWAV("assets/space-asteroids.wav");
     player_shooting_sound = Mix_LoadWAV("assets/shot.wav");
     enemy_expolosion_sound = Mix_LoadWAV("assets/explosion.wav");
@@ -151,7 +150,6 @@ int main(int argc, char *argv[])
 
         while (!is_quit && !gameOver)
         {
-            std::cout << x << " " << bullet_v << std::endl;
             while (SDL_PollEvent(&g_event) != 0)
             {
                 if (g_event.type == SDL_QUIT)
@@ -258,8 +256,18 @@ int main(int argc, char *argv[])
                         bosses.erase(bosses.begin() + i);
                         i--;
                         kill++;
-                        bullet_v+=0.05;
-                        x-=10;
+                        if (kill<=30) {
+                            bullet_v+=0.05;
+                            x-=10;
+                        }
+                        else if (30<kill<=45 && x>=300){
+                            bullet_v+=0.1;
+                            x-=15;
+                        }
+                        else if (45<kill<=60 && x>=300) {
+                            bullet_v+=0.2;
+                            x-=20;
+                        }
                         continue;
                     }
                     bosses[i]->B_createBullet(SCREEN_WIDTH, SCREEN_HEIGHT, g_screen, player_pos_x, player_pos_y, b_bullets,bullet_v);
@@ -401,7 +409,7 @@ int main(int argc, char *argv[])
             std::string scoreText = "Score: " + std::to_string(kill);
             std::string highScoreText = "High Score: " + std::to_string(highScore);
             if (kill > highScore) {
-                    highScore = kill; // Update high score
+                    highScore = kill; // update high score
                     writeHighScore(highScore);
                 }
             renderText(scoreText, 10, 10);

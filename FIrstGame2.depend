@@ -68,10 +68,10 @@
 1715268838 d:\c++\gameproject\firstgame2\explosion.h
 	"Objects.h"
 
-1715155395 source:d:\c++\gameproject\spaceshooterxxx\bullet.cpp
+1716367547 source:d:\c++\gameproject\spaceshooterxxx\bullet.cpp
 	"Bullet.h"
 
-1714619248 d:\c++\gameproject\spaceshooterxxx\bullet.h
+1716367554 d:\c++\gameproject\spaceshooterxxx\bullet.h
 	"Objects.h"
 	"mainFunc.h"
 
@@ -117,10 +117,10 @@
 	"Objects.h"
 	"mainFunc.h"
 
-1716365237 source:d:\c++\gameproject\spaceshooterxxx\player.cpp
+1716367821 source:d:\c++\gameproject\spaceshooterxxx\player.cpp
 	"Player.h"
 
-1716366313 source:d:\c++\gameproject\spaceshooterxxx\main.cpp
+1716382250 source:d:\c++\gameproject\spaceshooterxxx\main.cpp
 	"mainFunc.h"
 	"Player.h"
 	"Enemy.h"

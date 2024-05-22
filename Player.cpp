@@ -28,12 +28,12 @@ void Player::handleInput(SDL_Event events,SDL_Renderer* screen)
     if (events.type==SDL_KEYDOWN && events.key.repeat == 0) {
         switch(events.key.keysym.sym) {
             case SDLK_RIGHT :
-                x_val_+=p_speed;
-                break;
+            x_val_+=p_speed;
+            break;
 
             case SDLK_LEFT:
-                x_val_-=p_speed;
-                break;
+            x_val_-=p_speed;
+            break;
 
             case SDLK_UP:
             y_val_-=p_speed;
@@ -44,7 +44,7 @@ void Player::handleInput(SDL_Event events,SDL_Renderer* screen)
 
             break;
             case SDLK_e:
-                Bullet* p_bullet=new Bullet();
+            Bullet* p_bullet=new Bullet();
             p_bullet->loadImg("assets/playerBullet.png",screen);
             p_bullet->setRect(this->rect_.x+(60/2)-2,rect_.y);
             p_bullet->set_y(6);
