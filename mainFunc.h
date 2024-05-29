@@ -18,7 +18,7 @@ extern SDL_Window *g_window;
 extern SDL_Renderer *g_screen;
 extern SDL_Event g_event;
 
-const int SCREEN_WIDTH = 1273;
+const int SCREEN_WIDTH = 1264;
 const int SCREEN_HEIGHT = 720;
 const SDL_Rect EXPLOSION_CLIPS[5] = {
     {0, 0, 60, 60},

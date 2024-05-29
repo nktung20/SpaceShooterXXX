@@ -10,6 +10,8 @@ Objects g_menu;
 Objects g_death;
 Objects g_death_menu;
 Objects g_pause;
+Objects g_about;
+Objects g_tut;
 
 Mix_Chunk *gMusic = NULL;
 Mix_Chunk *enemy_expolosion_sound = NULL;
@@ -17,6 +19,7 @@ Mix_Chunk *player_explosion_sound = NULL;
 Mix_Chunk *enemy_shooting_sound = NULL;
 Mix_Chunk *player_shooting_sound = NULL;
 Mix_Chunk *player_death_sound = NULL;
+Mix_Chunk *click = NULL;
 
 TTF_Font *gFont = NULL;
 
@@ -28,13 +31,15 @@ bool loadProperty()
     g_death.loadImg("assets/death.png", g_screen);
     g_death_menu.loadImg("assets/death_menu.png", g_screen);
     g_pause.loadImg("assets/pause.png", g_screen);
+    g_about.loadImg("assets/about.jpg", g_screen);
+    g_tut.loadImg("assets/tut.png", g_screen);
 
     gMusic = Mix_LoadWAV("assets/space-asteroids.wav");
     player_shooting_sound = Mix_LoadWAV("assets/shot.wav");
     enemy_expolosion_sound = Mix_LoadWAV("assets/explosion.wav");
     player_explosion_sound = Mix_LoadWAV("assets/p_explosion.wav");
     player_death_sound = Mix_LoadWAV("assets/deathSound.wav");
-
+    click = Mix_LoadWAV("assets/click.wav");
     gFont = TTF_OpenFont("assets/Galaxus.ttf", 28);
 
     if (gFont == NULL)
@@ -106,16 +111,79 @@ void renderText(const std::string &text, int x, int y)
         }
     }
 }
+
+bool handleMouseEvent(SDL_Event &e, int &screenState, bool &isMuted)
+{
+    if (e.type == SDL_MOUSEBUTTONDOWN)
+    {
+        int x, y;
+        SDL_GetMouseState(&x, &y);
+
+        SDL_Rect aboutButtonRect = {290, 520, 310, 85};
+        SDL_Rect tutButtonRect = {675, 520, 310, 85};
+        SDL_Rect backButtonRect = {525, 590, 215, 80};
+        SDL_Rect soundsButtonRect = {19, 20, 75, 55};
+
+        if (screenState == 0)
+        {
+            if (x > aboutButtonRect.x && x < aboutButtonRect.x + aboutButtonRect.w &&
+                y > aboutButtonRect.y && y < aboutButtonRect.y + aboutButtonRect.h)
+            {
+                Mix_PlayChannel(-1, click, 0);
+                screenState = 1;
+                return true;
+            }
+            if (x > tutButtonRect.x && x < tutButtonRect.x + tutButtonRect.w &&
+                y > tutButtonRect.y && y < tutButtonRect.y + tutButtonRect.h)
+            {
+                Mix_PlayChannel(-1, click, 0);
+                screenState = 2;
+                return true;
+            }
+            if (x > soundsButtonRect.x && x < soundsButtonRect.x + soundsButtonRect.w &&
+                y > soundsButtonRect.y && y < soundsButtonRect.y + soundsButtonRect.h)
+            {
+                Mix_PlayChannel(-1, click, 0);
+                SDL_Delay(100);
+                if (isMuted)
+                {
+                    Mix_Resume(-1);
+                    isMuted = false;
+                }
+                else
+                {
+                    Mix_Pause(-1);
+                    isMuted = true;
+                }
+                return true;
+            }
+        }
+        else if (screenState == 1 || screenState == 2)
+        {
+            if (x > backButtonRect.x && x < backButtonRect.x + backButtonRect.w &&
+                y > backButtonRect.y && y < backButtonRect.y + backButtonRect.h)
+            {
+                Mix_PlayChannel(-1, click, 0);
+                screenState = 0;
+                return true;
+            }
+        }
+    }
+    return false;
+}
 int main(int argc, char *argv[])
 {
     bool playAgain = true;
     bool is_quit = false;
+    bool is_muted = false;
     int highScore = readHighScore();
+    int screenState = 0;
     if (init() == false)
         return -1;
 
     while (playAgain && !is_quit)
     {
+        is_muted = false;
         int x = 1100;
         double v = 4;
         double bullet_v = 5;
@@ -130,17 +198,42 @@ int main(int argc, char *argv[])
         while (isInMenu && !is_quit)
         {
             SDL_RenderClear(g_screen);
-            g_menu.renderTexture(g_screen, NULL);
+
+            if (screenState == 0)
+            {
+                g_menu.renderTexture(g_screen, NULL);
+                if (!is_muted)
+                {
+                    renderText("click to mute music", 5, 85);
+                }
+                else
+                {
+                    renderText("muted", 20, 85);
+                }
+            }
+            else if (screenState == 1)
+            {
+                g_about.renderTexture(g_screen, NULL);
+            }
+            else if (screenState == 2)
+            {
+                g_tut.renderTexture(g_screen, NULL);
+            }
+
             SDL_RenderPresent(g_screen);
+
             while (SDL_PollEvent(&g_event) != 0)
             {
                 if (g_event.type == SDL_QUIT)
                 {
-
                     isInMenu = false;
                     is_quit = true;
                 }
-                if (g_event.type == SDL_KEYDOWN && g_event.key.keysym.sym == SDLK_p)
+                if (handleMouseEvent(g_event, screenState, is_muted))
+                {
+                    // kiểm tra thay đổi màn hình
+                }
+                if (g_event.type == SDL_KEYDOWN && g_event.key.keysym.sym == SDLK_p && screenState == 0)
                 {
                     g_menu.free();
                     isInMenu = false;

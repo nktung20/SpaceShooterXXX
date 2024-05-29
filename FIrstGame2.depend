@@ -78,7 +78,7 @@
 1716394919 d:\c++\gameproject\spaceshooterxxx\objects.h
 	"mainFunc.h"
 
-1716394919 d:\c++\gameproject\spaceshooterxxx\mainfunc.h
+1716993931 d:\c++\gameproject\spaceshooterxxx\mainfunc.h
 	<iostream>
 	<fstream>
 	<SDL.h>
@@ -120,7 +120,7 @@
 1716367821 source:d:\c++\gameproject\spaceshooterxxx\player.cpp
 	"Player.h"
 
-1716395070 source:d:\c++\gameproject\spaceshooterxxx\main.cpp
+1717008793 source:d:\c++\gameproject\spaceshooterxxx\main.cpp
 	"mainFunc.h"
 	"Player.h"
 	"Enemy.h"
