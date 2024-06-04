@@ -19,5 +19,5 @@
 - Play/pause nhạc, Play/pause game.
 ## Tutorial
 - Đã bao gồm phần giới thiệu và tutorial trong giao diện chính của game.
-
+- Hướng dẫn chơi cụ thể/ demo về game: https://drive.google.com/file/d/1AANa_Gwq9WDQo82h9mM6fk0Bl9HcUnGz/view?usp=drive_link
 ![menu](https://github.com/nktung20/SpaceShooterXXX/assets/160835301/538bf65d-5e57-4a91-b2a4-349ed0cdaea1)
