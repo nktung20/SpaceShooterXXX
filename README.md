@@ -11,7 +11,7 @@
 ## Techniques applied
 - Áp dụng cách thức chuẩn hóa trong toán học để điều chỉnh đường đạn của địch hướng về nhân vật.
 - Áp dụng kĩ thuật Object Oriented Programming.
-- Sử dụng đầy đủ các thử viện cơ bản SDL_ttf, SDL_mixer, SDL_image.
+- Sử dụng đầy đủ các thư viện cơ bản SDL_ttf, SDL_mixer, SDL_image.
 - Áp dụng kĩ thuật di chuyển màn hình.
 - Áp dụng các kĩ thuật xử lí va chạm, xử lí phím (di chuyển và chơi/thoát game), xử lí chuột (bắt sự kiện khi click).
 - Đọc/ ghi file txt để lưu trữ và cập nhật Highscore.
